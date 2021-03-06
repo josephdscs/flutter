@@ -1,7 +1,6 @@
+import 'package:first_app/quiz.dart';
+import 'package:first_app/result.dart';
 import 'package:flutter/material.dart';
-
-import 'question.dart';
-import 'answer.dart';
 
 void main() => runApp(MyQuizApp());
 
@@ -12,51 +11,67 @@ class MyQuizApp extends StatefulWidget {
   }
 }
 
+const _questions = [
+  {
+    'questionText': 'What\'s your color?',
+    'answer': [
+      {'text': 'Black', 'score': 10},
+      {'text': 'Red', 'score': 7},
+      {'text': 'Blue', 'score': 3},
+      {'text': 'Green', 'score': 1},
+    ],
+  },
+  {
+    'questionText': 'What\'s your animal?',
+    'answer': [
+      {'text': 'Bear', 'score': 10},
+      {'text': 'Lion', 'score': 7},
+      {'text': 'Tiger', 'score': 3},
+      {'text': 'Elephant', 'score': 1},
+    ],
+  },
+  {
+    'questionText': 'What\'s your Instructor?',
+    'answer': [
+      {'text': 'Max', 'score': 10},
+      {'text': 'Joseph', 'score': 7},
+      {'text': 'Noa', 'score': 1},
+    ],
+  },
+];
+
 class _MyQuizAppState extends State<MyQuizApp> {
-  var _questions = [
-    {
-      'questionText': 'What\'s your color?',
-      'answer': ['Black', 'Red', 'Blue', 'Green'],
-    },
-    {
-      'questionText': 'What\'s your animal?',
-      'answer': ['Tiger', 'Bear', 'Elephant', 'Lion'],
-    },
-    {
-      'questionText': 'What\'s your Instructor?',
-      'answer': ['Joseph', 'Noa', 'Max'],
-    },
-  ];
   int _questionIdx = 0;
-  void _answerQuestion() {
+  bool _hasMoreQuestions = true;
+  int _totalScore = 0;
+
+  void _onAnswerQuestion(int score) {
     setState(() {
+      _totalScore += score;
       if (_questionIdx < (_questions.length - 1)) {
         _questionIdx++;
       } else {
-        _questionIdx = 0;
+        _hasMoreQuestions = false;
       }
     });
-    print('Answer Question!');
     print(_questionIdx);
+    print('Answer Question!');
+    print('Answer Question! => ' + score.toString());
   }
 
   @override
   Widget build(BuildContext ctx) {
     return MaterialApp(
-      home: Scaffold(
-          appBar: AppBar(
-            title: Text('My App'),
-          ),
-          body: Column(
-            children: [
-              Question(
-                _questions[_questionIdx]['questionText'],
-              ),
-              ...(_questions[_questionIdx]['answers'] as List<String>).map((a) {
-                return Answer(_answerQuestion, a);
-              }).toList(),
-            ],
-          )),
-    );
+        home: Scaffold(
+      appBar: AppBar(
+        title: Text('My App'),
+      ),
+      body: _hasMoreQuestions
+          ? Quiz(
+              question: _questions[_questionIdx],
+              onAnswerQuestion: _onAnswerQuestion,
+            )
+          : Result(score: _totalScore),
+    ));
   }
 }

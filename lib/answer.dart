@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 
 class Answer extends StatelessWidget {
-  final Function selectHandler;
-  final String text;
+  final Function onAnswer;
+  final Map<String, Object> answer;
 
-  Answer(this.selectHandler, this.text);
+  Answer({this.onAnswer, this.answer});
+
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       child: RaisedButton(
         color: Colors.blueAccent,
-        child: Text('Answer 1'),
-        onPressed: selectHandler,
+        textColor: Colors.white,
+        child: Text(answer['text']),
+        onPressed: () => onAnswer(answer['score']),
       ),
     );
   }
