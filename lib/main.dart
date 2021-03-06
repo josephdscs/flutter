@@ -59,6 +59,14 @@ class _MyQuizAppState extends State<MyQuizApp> {
     print('Answer Question! => ' + score.toString());
   }
 
+  void _resetQuiz() {
+    setState(() {
+      _questionIdx = 0;
+      _totalScore = 0;
+      _hasMoreQuestions = true;
+    });
+  }
+
   @override
   Widget build(BuildContext ctx) {
     return MaterialApp(
@@ -71,7 +79,10 @@ class _MyQuizAppState extends State<MyQuizApp> {
               question: _questions[_questionIdx],
               onAnswerQuestion: _onAnswerQuestion,
             )
-          : Result(score: _totalScore),
+          : Result(
+              score: _totalScore,
+              onReset: _resetQuiz,
+            ),
     ));
   }
 }
