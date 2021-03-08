@@ -1,5 +1,8 @@
-import './transaction.i.dart';
 import 'package:flutter/material.dart';
+
+import 'models/transaction.dart';
+import 'widgets/transaction_list.dart';
+import 'widgets/new_transaction.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,12 +22,17 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  final List<Transaction> transactions = [
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final List<Transaction> _userTransactions = [
     Transaction(
       id: 't1',
       title: 'New Shoes',
-      amount: 69.80,
+      amount: 69.99,
       date: DateTime.now(),
     ),
     Transaction(
@@ -35,16 +43,49 @@ class MyHomePage extends StatelessWidget {
     )
   ];
 
+  void _onAddTransaction(String txTitle, double txAmount) {
+    final newTx = Transaction(
+      id: DateTime.now().toString(),
+      date: DateTime.now(),
+      title: txTitle,
+      amount: txAmount,
+    );
+
+    setState(() {
+      _userTransactions.add(newTx);
+    });
+  }
+
+  void _showAddNewTransaction(BuildContext ctx) {
+    showModalBottomSheet(
+      context: ctx,
+      builder: (_) {
+        return NewTransaction(_onAddTransaction);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Expensy App'),
-        ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+      appBar: AppBar(
+        title: Text('Expensy App'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () => _showAddNewTransaction(context),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showAddNewTransaction(context),
+        child: Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      body: SingleChildScrollView(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
+          children: [
             Container(
               width: double.infinity,
               child: Card(
@@ -53,14 +94,10 @@ class MyHomePage extends StatelessWidget {
                 elevation: 5,
               ),
             ),
-            Column(
-              children: transactions.map((tx) {
-                return Card(
-                  child: Text(tx.title),
-                );
-              }).toList(),
-            )
+            TransactionList(_userTransactions),
           ],
-        ));
+        ),
+      ),
+    );
   }
 }
