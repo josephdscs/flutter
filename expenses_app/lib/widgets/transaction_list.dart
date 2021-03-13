@@ -33,53 +33,35 @@ class TransactionList extends StatelessWidget {
             )
           : ListView.builder(
               itemCount: transactions.length,
-              itemBuilder: (context, index) {
+              itemBuilder: (context, idx) {
                 return Card(
-                  child: Row(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 15,
-                        ),
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Theme.of(context).primaryColorLight,
-                            width: 2,
-                          ),
-                        ),
-                        child: Text(
-                          '\$${transactions[index].amount.toStringAsFixed(2)}',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).primaryColorDark,
+                  elevation: 5,
+                  margin: EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 5,
+                  ),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 30,
+                      child: Padding(
+                        padding: EdgeInsets.all(6),
+                        child: FittedBox(
+                          child: Text(
+                            '\$${transactions[idx].amount.toStringAsFixed(0)}',
                           ),
                         ),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            transactions[index].title,
-                            style: Theme.of(context).textTheme.headline6,
-                          ),
-                          Text(
-                            DateFormat.yMMMMd()
-                                .format(transactions[index].date),
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
+                    ),
+                    title: Text(
+                      transactions[idx].title,
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    subtitle: Text(
+                      DateFormat.yMMMd().format(transactions[idx].date),
+                    ),
                   ),
                 );
-              },
-            ),
+              }),
     );
   }
 }
