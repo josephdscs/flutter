@@ -45,29 +45,37 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 6,
-      margin: EdgeInsets.all(20),
-      child: Padding(
-        padding: EdgeInsets.all(10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: groupedTransactionValues.map((data) {
-            final double spendingPctOfTotal = totalWeekSpending == 0.0
-                ? 0.0
-                : (data['amount'] as double) / totalWeekSpending;
+    return Column(
+      children: [
+        Card(
+          elevation: 6,
+          margin: EdgeInsets.all(20),
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: groupedTransactionValues.map((data) {
+                final double spendingPctOfTotal = totalWeekSpending == 0.0
+                    ? 0.0
+                    : (data['amount'] as double) / totalWeekSpending;
 
-            return Flexible(
-              fit: FlexFit.tight,
-              child: ChartBar(
-                label: data['day'],
-                spendingAmount: data['amount'],
-                spendingPctOfTotal: spendingPctOfTotal,
-              ),
-            );
-          }).toList(),
+                return Flexible(
+                  fit: FlexFit.tight,
+                  child: ChartBar(
+                    label: data['day'],
+                    spendingAmount: data['amount'],
+                    spendingPctOfTotal: spendingPctOfTotal,
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
         ),
-      ),
+        Text(
+          'Total Spent: \$$totalWeekSpending',
+          style: Theme.of(context).textTheme.headline6,
+        ),
+      ],
     );
   }
 }
