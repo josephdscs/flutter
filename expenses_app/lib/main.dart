@@ -61,27 +61,41 @@ class _MyHomePageState extends State<MyHomePage> {
       id: 't1',
       title: 'New Shoes',
       amount: 9.99,
-      date: DateTime.now().subtract(Duration(days: 5)),
-    ),
-    Transaction(
-      id: 't1',
-      title: 'New Shoes',
-      amount: 69.99,
-      date: DateTime.now().subtract(Duration(days: 6)),
-    ),
-    Transaction(
-      id: 't1',
-      title: 'New Shoes',
-      amount: 49.99,
       date: DateTime.now().subtract(Duration(days: 1)),
     ),
     Transaction(
       id: 't1',
       title: 'New Shoes',
-      amount: 99.99,
+      amount: 69.99,
       date: DateTime.now().subtract(Duration(days: 2)),
     ),
+    Transaction(
+      id: 't1',
+      title: 'New Shoes',
+      amount: 49.99,
+      date: DateTime.now().subtract(Duration(days: 3)),
+    ),
+    Transaction(
+      id: 't1',
+      title: 'New Shoes',
+      amount: 99.99,
+      date: DateTime.now().subtract(Duration(days: 4)),
+    ),
+    Transaction(
+      id: 't1',
+      title: 'New Shoes',
+      amount: 49.99,
+      date: DateTime.now().subtract(Duration(days: 5)),
+    ),
+    Transaction(
+      id: 't1',
+      title: 'New Shoes',
+      amount: 99.99,
+      date: DateTime.now().subtract(Duration(days: 6)),
+    ),
   ];
+
+  bool _showChart = false;
 
   List<Transaction> get _recentTransactions {
     return _userTransactions.where((tx) {
@@ -121,6 +135,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     final appBar = AppBar(
       title: Text('Expensy App'),
       actions: [
@@ -135,6 +151,18 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar.preferredSize.height -
         MediaQuery.of(context).padding.top;
 
+    final txListWidget = Container(
+      height: uiHeight * 0.7,
+      child: TransactionList(_userTransactions, _deleteTransaction),
+    );
+
+    final txChartWidget = (double height) {
+      return Container(
+        height: uiHeight * height,
+        child: Chart(_recentTransactions),
+      );
+    };
+
     return Scaffold(
       appBar: appBar,
       floatingActionButton: FloatingActionButton(
@@ -146,14 +174,23 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              height: uiHeight * 0.3,
-              child: Chart(_recentTransactions),
-            ),
-            Container(
-              height: uiHeight * 0.7,
-              child: TransactionList(_userTransactions, _deleteTransaction),
-            ),
+            if (isLandscape)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Show Chart'),
+                  Switch(
+                      value: _showChart,
+                      onChanged: (val) {
+                        setState(() {
+                          _showChart = val;
+                        });
+                      })
+                ],
+              ),
+            if (!isLandscape) txChartWidget(0.3),
+            if (!isLandscape) txListWidget,
+            if (isLandscape) _showChart ? txChartWidget(0.7) : txListWidget,
           ],
         ),
       ),
