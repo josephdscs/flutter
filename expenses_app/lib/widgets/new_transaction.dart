@@ -1,7 +1,8 @@
-import 'package:expenses_app/widgets/adaptives/adaptive_flat_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import './adaptives/adaptive_flat_button.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function onAdd;
@@ -103,11 +104,16 @@ class _NewTransactionState extends State<NewTransaction> {
                   ],
                 ),
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: _onSubmit,
-                child: Text('Add Transaction'),
-                color: Theme.of(context).primaryColor,
-                textColor: Theme.of(context).textTheme.button.color,
+                child: Text(
+                  'Add Transaction',
+                ),
+                style: ElevatedButton.styleFrom(
+                    primary: Theme.of(context).primaryColor,
+                    textStyle: TextStyle(
+                      color: Theme.of(context).textTheme.button.color,
+                    )),
               )
             ],
           ),
