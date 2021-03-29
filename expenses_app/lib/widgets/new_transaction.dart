@@ -97,7 +97,7 @@ class _NewTransactionState extends State<NewTransaction> {
                             : 'Date: ${DateFormat.yMd().format(_selectedDate)}',
                       ),
                     ),
-                    AdaptiveFlatButton(
+                    AdaptiveTextButton(
                       onPressed: _openDatePicker,
                       text: 'Choose Date',
                     )
@@ -110,10 +110,9 @@ class _NewTransactionState extends State<NewTransaction> {
                   'Add Transaction',
                 ),
                 style: ElevatedButton.styleFrom(
-                    primary: Theme.of(context).primaryColor,
-                    textStyle: TextStyle(
-                      color: Theme.of(context).textTheme.button.color,
-                    )),
+                  primary: Theme.of(context).primaryColor,
+                  onPrimary: Theme.of(context).textTheme.button.color,
+                ),
               )
             ],
           ),

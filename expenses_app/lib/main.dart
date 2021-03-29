@@ -164,44 +164,53 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar.preferredSize.height -
         mediaQuery.padding.top;
 
-    final txListWidget = Container(
-      height: uiHeight * 0.7,
-      child: TransactionList(_userTransactions, _deleteTransaction),
-    );
+    Widget txListWidget() {
+      return Container(
+        height: uiHeight * 0.7,
+        child: TransactionList(_userTransactions, _deleteTransaction),
+      );
+    }
 
-    final txChartWidget = (double height) {
+    Widget _txChartWidget(double height) {
       return Container(
         height: uiHeight * height,
         child: Chart(_recentTransactions),
       );
-    };
+    }
+
+    Widget _landscapeSwitch() {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Show Chart',
+            style: Theme.of(context).textTheme.headline6,
+          ),
+          Switch.adaptive(
+              activeColor: Theme.of(context).accentColor,
+              value: _showChart,
+              onChanged: (val) {
+                setState(() {
+                  _showChart = val;
+                });
+              })
+        ],
+      );
+    }
 
     final pageBody = SafeArea(
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (isLandscape)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Show Chart',
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                  Switch.adaptive(
-                      activeColor: Theme.of(context).accentColor,
-                      value: _showChart,
-                      onChanged: (val) {
-                        setState(() {
-                          _showChart = val;
-                        });
-                      })
-                ],
-              ),
-            if (!isLandscape) txChartWidget(0.3),
-            if (!isLandscape) txListWidget,
-            if (isLandscape) _showChart ? txChartWidget(0.7) : txListWidget,
+            if (isLandscape) ...[
+              _landscapeSwitch(),
+              _showChart ? _txChartWidget(0.7) : txListWidget(),
+            ],
+            if (!isLandscape) ...[
+              _txChartWidget(0.3),
+              txListWidget(),
+            ],
           ],
         ),
       ),
